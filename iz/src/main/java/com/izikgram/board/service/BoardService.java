@@ -2,13 +2,13 @@ package com.izikgram.board.service;
 
 import com.izikgram.board.entity.Board;
 import com.izikgram.board.repository.BoardMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
@@ -80,6 +80,10 @@ public class BoardService {
 
     // reg_date를 "몇 분 전"으로 변환하는 메서드
     private String formatTimeDifference(String regDateStr) {
+        if (regDateStr == null || regDateStr.isEmpty()) {
+            return null;
+        }
+
         try {
             // reg_date를 LocalDateTime으로 변환
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // DB에서 받아오는 포맷에 맞게 설정
@@ -101,8 +105,11 @@ public class BoardService {
                 long days = duration.toDays();
                 return days + "일 전"; // 하루 이상은 "몇 일 전"
             }
-        } catch (Exception e) {
+        } catch (DateTimeParseException e) {
             e.printStackTrace(); // 예외 발생 시 로깅
+            return "잘못된 시간 형식"; // 잘못된 형식일 경우 처리
+        } catch (Exception e) {
+            e.printStackTrace(); // 일반 예외 처리
             return "시간 오류"; // 예외 발생 시 반환할 기본 값
         }
     }

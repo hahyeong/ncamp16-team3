@@ -29,10 +29,10 @@
     <div class="border-b pb-2">
         <h2 class="text-4xl font-black" th:text="${board.board_type == 1 ? '자유게시판 글수정' : (board.board_type == 2 ? '하소연 게시판 글수정' : '잘못된 요청이다.')}"></h2>
     </div>
-    <form id="postForm" th:action="@{/board/{board_type}/update(board_id=${board_id})}" method="post" onsubmit="return PostFormInsertBut()">
+    <form id="postForm" th:action="@{/board/{board_type}/{board_id}(board_type=${board.board_type}, board_id=${board.board_id})}" method="post" onsubmit="return PostFormInsertBut()">
         <!-- writer_id는 세션에서 받아와서 히든 필드로 전달 -->
-        <input type="hidden"  name="writer_id">
-        <input type="number" name="board_type" th:value="${board_type}">
+        <input type="hidden"  name="writer_id" th:text="123">
+        <input type="hidden" name="board_type" th:value="${board_type}">
         <!-- 제목 입력 -->
         <input type="text" id="title" name="title" th:value="${board.title}"   class="border border-gray-300 rounded-md p-2 w-full my-5" maxlength="50" readonly>
 

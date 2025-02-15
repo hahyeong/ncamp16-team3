@@ -46,7 +46,13 @@ public class  BoardController {
 
     //자유,하소연 작성하기 페이지 이동
     @GetMapping("/postForm")
-    public String postForm(@RequestParam("board_type")int board_type, Model model){
+    public String postForm(@RequestParam("board_type")int board_type, HttpSession session, Model model){
+
+
+//        if (session.getAttribute("writer_id") == null) {
+//            return "redirect:/";
+//        }
+
 
         if (board_type != 1 && board_type != 2) {
             // 사용하게 된다면..
@@ -54,32 +60,33 @@ public class  BoardController {
             return "redirect:/";
         }
         System.out.println("확인용 board_type :" + board_type);
-//        System.out.println("보드아이디아이디 :" + board_id);
 
-
-//        Board board = boardService.selectDetail(board_id,board_type);
         String board_name = boardService.findBoardName(board_type);
-
 
         model.addAttribute("board_name", board_name);
         model.addAttribute("board_type", board_type);
-
 
         return "/board/postForm";
     }
 
     // 글작성
     @PostMapping("/{board_type}/post")
-    public String insertPost(
-            @PathVariable("board_type") int board_type,
-            HttpSession session,
-            @RequestParam("title") String title,
-            @RequestParam("content") String content) {
+    public String insertPost(@PathVariable("board_type") int board_type,
+                             HttpSession session,
+                             @RequestParam("title") String title,
+                             @RequestParam("content") String content) {
 
         // 세션에서 writer_id 가져오기
-        // String writer_id = (String) session.getAttribute("writer_id");
+//        String writer_id = (String) session.getAttribute("writer_id");
+//        System.out.println("writer_id: " + writer_id);
+//        System.out.println("세션에서 writer_id: " + session.getAttribute("writer_id"));
 
-        String writer_id = "hello";
+        String writer_id = "123";
+
+        // writer_id가 null이면 로그인하지 않은 상태일 가능성이 높음
+//        if (writer_id == null) {
+//            return "redirect:/";  // 로그인 페이지로 리다이렉트
+//        }
 
 
         // board_type 유효성 검사
@@ -126,11 +133,20 @@ public class  BoardController {
 
     //자유, 하소연 게시글 수정하기
     @PostMapping("/{board_type}/{board_id}")
-    public String modifyPost( Board board, Model model){
+    public String modifyPost(@PathVariable("board_type") int board_type,
+                             @PathVariable("board_id") int board_id,
+                             @RequestParam("title") String title,
+                             @RequestParam("content") String content,
+                             Model model){
 
-//        boardService.modifyBoard(int board_id, String title, String content, int board_type)
+        boolean result = boardService.modifyBoard(board_id, title, content, board_type);
 
-        return "redirect:/board/" + board.getBoard_type();
+        if (result) {
+            return "redirect:/board/" + board_type; // 성공 시 게시판 페이지로 리다이렉트
+        } else {
+            model.addAttribute("errorMessage", "수정에 실패했습니다.");
+            return "redirect:/"; // 수정 실패 시 에러 페이지로 이동
+        }
     }
 
 

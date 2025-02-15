@@ -54,8 +54,9 @@
     </div>
     <table class="w-full text-left">
         <tbody>
-        <!-- 리스트부분분 -->
-        <tr th:each="board : ${listBoard}" class="border-b-3 border-gray-400 border-gray-200">
+        <!-- 리스트부분 -->
+        <tr th:each="board : ${listBoard}" class="border-b-3 border-gray-400 border-gray-200"
+            th:if="${board.title != null and board.title != ''}">
             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                 <div class="mb-2 text-xl font-black ">
                     <a class="inline-block w-40 truncate"  th:href="@{/board/{board_type}/{board_id}(board_type=${board.board_type}, board_id=${board.board_id})}" th:text="${board.title}"></a>
@@ -63,9 +64,7 @@
                 <div class="mb-2 block w-40 truncate" th:text="${board.content}">
                     <!-- 게시판 내용 -->
                 </div>
-                <div class="text-gray-500 text-xs" th:text="${board.reg_date}">
-
-                </div>
+                <div class="text-gray-500 text-xs" th:if="${board.reg_date != null and board.reg_date != ''}" th:text="${board.reg_date}"></div>
             </th>
             <td class="">
                 <div class="flex justify-end mb-2">
@@ -84,7 +83,7 @@
                     <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                         <img src="https://img.icons8.com/?size=100&id=6520&format=png&color=000000" alt="like_button" class="w-5 h-5">
                     </a>
-                    <span class="w-6 h-6 ml-2 text-right" >0</span>
+                    <span class="w-6 h-6 ml-2 text-right">0</span>
                 </div>
             </td>
         </tr>

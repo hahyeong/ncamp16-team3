@@ -33,6 +33,7 @@
 <!--            <input type="hidden" name="board_id" th:value="${board_id}">-->
             <!-- writer_id는 세션에서 받아와서 히든 필드로 전달 -->
 <!--            <input type="hidden"  name="writer_id" th:value="${writer_id}">-->
+            <input type="hidden" name="writer_id" th:value="${session['writer_id']}">
             <!-- 제목 입력 -->
             <input type="text" id="writer_id" name="title"  placeholder="제목 입력" class="border border-gray-300 rounded-md p-2 w-full my-5" maxlength="50">
 

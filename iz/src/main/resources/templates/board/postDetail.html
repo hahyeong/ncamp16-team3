@@ -38,7 +38,7 @@
     <div class="text-gray-500 text-xs p-3 " th:text="${board.reg_date}">13분전....</div>
     <hr class="border-b border-gray-200">
     <!-- 상세내용-->
-    <div class="h-80">
+    <div class="h-50">
         <textarea id="contentText" class="w-full p-2 mt-2 border border-transparent text-gray-700 focus:outline-none resize-none"
                   th:text="${board.content}" th:value="${board.content}" readonly></textarea>
     </div>
@@ -56,7 +56,7 @@
             </button>
         </div>
         <!-- 수정 페이지 이동  -->
-        <div id="updateDeleteBtn" class="updateDeleteBtn hidden">
+        <div >
             <a th:href="@{/board/update/{board_type}/{board_id}(board_type=${board_type}, board_id=${board_id})}" class="ml-2 px-4 py-2 bg-main-sky-highlight text-black rounded hover:bg-main-sky-basic rounded-xl cursor-pointer">
                 수정
             </a>
