@@ -42,7 +42,6 @@ public class  BoardController {
     //자유,하소연 작성하기 페이지 이동
     @GetMapping("/postForm")
     public String postForm(@RequestParam("board_type")int board_type,
-                           HttpSession session,
                            Model model){
 
         if (board_type != 1 && board_type != 2) {
