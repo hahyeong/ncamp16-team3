@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>하소연게시판/자유게시판</title>
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -24,6 +23,13 @@
             --color-main-yellow-basic: #fdd391;
         }
     </style>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+    <script th:src="@{/js/postDetail.js}"></script>
+    <script type="text/javascript">
+
+
+    </script>
 
 </head>
 
@@ -64,7 +70,7 @@
                 <div class="mb-2 block w-40 truncate" th:text="${board.content}">
                     <!-- 게시판 내용 -->
                 </div>
-                <div class="text-gray-500 text-xs" th:if="${board.reg_date != null and board.reg_date != ''}" th:text="${board.reg_date}"></div>
+                <div class="text-gray-500 text-xs reg_date" th:data-reg-date="${board.reg_date}"  th:text="${board.reg_date}"></div>
             </th>
             <td class="">
                 <div class="flex justify-end mb-2">

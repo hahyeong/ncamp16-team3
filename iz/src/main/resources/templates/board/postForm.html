@@ -30,10 +30,6 @@
             <h2 class="text-4xl font-black" th:text="${board_name == '자유게시판' ? '자유글 작성하기' : (board_name == '하소연 게시판' ? '하소연 작성하기' : '잘못된 요청이다.')}"></h2>
         </div>
         <form  th:action="@{/board/{board_type}/post(board_type=${board_type})}" method="post" onsubmit="return PostFormInsertBut()">
-<!--            <input type="hidden" name="board_id" th:value="${board_id}">-->
-            <!-- writer_id는 세션에서 받아와서 히든 필드로 전달 -->
-<!--            <input type="hidden"  name="writer_id" th:value="${writer_id}">-->
-            <input type="hidden" name="writer_id" th:value="${session['writer_id']}">
             <!-- 제목 입력 -->
             <input type="text" id="writer_id" name="title"  placeholder="제목 입력" class="border border-gray-300 rounded-md p-2 w-full my-5" maxlength="50">
 

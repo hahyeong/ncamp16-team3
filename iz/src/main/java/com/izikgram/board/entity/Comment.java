@@ -2,6 +2,8 @@ package com.izikgram.board.entity;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class Comment {
 
@@ -9,6 +11,6 @@ public class Comment {
     private int board_id;
     private String writer_id;
     private String comment_content;
-    private String reg_date;
+    private LocalDateTime reg_date;
 
 }

@@ -2,17 +2,19 @@ package com.izikgram.board.controller;
 
 import com.izikgram.board.entity.Board;
 import com.izikgram.board.service.BoardService;
+import com.izikgram.user.entity.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
 
 @Controller
 @RequestMapping("/board")
 public class  BoardController {
+
 
     @Autowired
     private BoardService boardService;
@@ -22,7 +24,6 @@ public class  BoardController {
     public String boardCommunity(@PathVariable("board_type") int board_type, Model model){
 
         System.out.println("board_type: " + board_type);  // 확인용 로그
-
         if (board_type != 1 && board_type != 2) {
             model.addAttribute("error", "유효하지 않은 게시판 타입입니다.");
             return "redirect:/";
@@ -31,40 +32,30 @@ public class  BoardController {
         String board_name = boardService.findBoardName(board_type);
         List<Board> listBoard  = boardService.findBoardList(board_type);
 
-        //확인용
-        System.out.println("조회게시글 list :" + listBoard);
-        System.out.println("글작성 board_type :" + board_type);
-
         model.addAttribute("board_name", board_name);
         model.addAttribute("listBoard", listBoard);
         model.addAttribute("board_type", board_type);
 
-
         return "/board/community";
     }
 
-
     //자유,하소연 작성하기 페이지 이동
     @GetMapping("/postForm")
-    public String postForm(@RequestParam("board_type")int board_type, HttpSession session, Model model){
-
-
-//        if (session.getAttribute("writer_id") == null) {
-//            return "redirect:/";
-//        }
-
+    public String postForm(@RequestParam("board_type")int board_type,
+                           HttpSession session,
+                           Model model){
 
         if (board_type != 1 && board_type != 2) {
             // 사용하게 된다면..
             model.addAttribute("error", "유효하지 않은 게시판 타입입니다.");
             return "redirect:/";
         }
-        System.out.println("확인용 board_type :" + board_type);
 
         String board_name = boardService.findBoardName(board_type);
 
         model.addAttribute("board_name", board_name);
         model.addAttribute("board_type", board_type);
+//        model.addAttribute("writer_id", writer_id);
 
         return "/board/postForm";
     }
@@ -76,29 +67,17 @@ public class  BoardController {
                              @RequestParam("title") String title,
                              @RequestParam("content") String content) {
 
-        // 세션에서 writer_id 가져오기
-//        String writer_id = (String) session.getAttribute("writer_id");
-//        System.out.println("writer_id: " + writer_id);
-//        System.out.println("세션에서 writer_id: " + session.getAttribute("writer_id"));
-
-        String writer_id = "123";
-
-        // writer_id가 null이면 로그인하지 않은 상태일 가능성이 높음
-//        if (writer_id == null) {
-//            return "redirect:/";  // 로그인 페이지로 리다이렉트
-//        }
-
-
         // board_type 유효성 검사
         if (board_type != 1 && board_type != 2) {
-            return "/index";
+            return "redirect:/";
         }
+
+        //member_id 가져오기..
+        User user = (User)session.getAttribute("user");
+        String writer_id = user.getMember_id();
 
         // 게시글 삽입
         boardService.insertPost(board_type, writer_id, title, content);
-
-        //확인용
-        System.out.println("글 삽입 :" + board_type+ "," + writer_id + "," + title + "," + content);
 
         return "redirect:/board/" + board_type;
     }
@@ -111,13 +90,20 @@ public class  BoardController {
     }
 
     //자유,하소연 상세보기
-
     @GetMapping("/{board_type}/{board_id}")
     public String postDetail(@PathVariable("board_type") int board_type,
-                             @PathVariable("board_id") int board_id, Model model ){
+                             @PathVariable("board_id") int board_id,
+                             HttpSession session,
+                             Model model ){
 
         Board board  = boardService.selectDetail(board_id,board_type);
+
+        //세션에서 User 객체 가져오기
+        User user = (User)session.getAttribute("user");
+        String writer_id = user.getMember_id();
+
         model.addAttribute("board", board);
+        model.addAttribute("member_id", writer_id);
 
         return "/board/postDetail";
     }
@@ -126,8 +112,10 @@ public class  BoardController {
     @GetMapping("/update/{board_type}/{board_id}")
     public String updatePost(@PathVariable("board_type") int board_type,
                              @PathVariable("board_id") int board_id, Model model){
+
         Board board = boardService.selectDetail(board_id,board_type);
         model.addAttribute("board", board);
+
         return "/board/postFormModify";
     }
 
@@ -137,15 +125,22 @@ public class  BoardController {
                              @PathVariable("board_id") int board_id,
                              @RequestParam("title") String title,
                              @RequestParam("content") String content,
+                             HttpSession session,
                              Model model){
 
-        boolean result = boardService.modifyBoard(board_id, title, content, board_type);
+        User user = (User)session.getAttribute("user");
+        String member_id = user.getMember_id();
 
-        if (result) {
-            return "redirect:/board/" + board_type; // 성공 시 게시판 페이지로 리다이렉트
+        Board board = boardService.selectDetail(board_id, board_type);
+        String writer_id = board.getWriter_id();
+
+        if(member_id != null && member_id.equals(writer_id)){
+            // 서버에서 조회한 writer_id와 세션에서 조회한 member_id가 같으면 수정
+            boolean result = boardService.modifyBoard(board_id, title, content, board_type);
+            return "redirect:/board/" + board_type; // 성공시 게시판으로 이동
         } else {
             model.addAttribute("errorMessage", "수정에 실패했습니다.");
-            return "redirect:/"; // 수정 실패 시 에러 페이지로 이동
+            return "redirect:/"; // 실패시 그냥 일단 로그인페이지
         }
     }
 

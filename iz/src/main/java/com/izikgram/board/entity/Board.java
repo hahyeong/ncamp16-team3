@@ -2,6 +2,8 @@ package com.izikgram.board.entity;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class Board {
 
@@ -14,7 +16,8 @@ public class Board {
     private String writer_id;
     private String title;
     private String content;
-    private String reg_date;
+    private LocalDateTime reg_date;
+//    private String reg_date;
 
     // 좋아요/싫어요
     private int like_count;

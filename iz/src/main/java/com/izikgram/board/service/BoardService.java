@@ -19,8 +19,9 @@ public class BoardService {
 
     //게시판 종류 조회
     public String findBoardName(int board_type){
+
         String boardName = boardMapper.getBoardName(board_type);
-        System.out.println(boardName);
+
         return boardName;
     }
 
@@ -30,11 +31,11 @@ public class BoardService {
         System.out.println("Boards retrieved: " + boards);  // 리스트 내용 확인
 
         // 각 게시판의 reg_date를 "몇 분 전" 형태로 변환하여 바로 넣기
-        for (Board board : boards) {
-            String formattedTime = formatTimeDifference(board.getReg_date());
-            board.setReg_date(formattedTime);  // reg_date 필드를 변형된 시간으로 설정
-            System.out.println("Board - " + formattedTime);
-        }
+//        for (Board board : boards) {
+//            String formattedTime = formatTimeDifference(board.getReg_date());
+//            board.setReg_date(formattedTime);  // reg_date 필드를 변형된 시간으로 설정
+//            System.out.println("Board - " + formattedTime);
+//        }
 
         return boards;
     }
@@ -47,15 +48,15 @@ public class BoardService {
 
     //게시글 상세보기
     public Board selectDetail(int board_id, int board_type){
-        Board board = boardMapper.selectBoard(board_id, board_type);
+//        Board board = boardMapper.selectBoard(board_id, board_type);
 
         // 각 게시판의 reg_date를 "몇 분 전" 형태로 변환하여 바로 넣기
 
-        String formattedTime = formatTimeDifference(board.getReg_date());
-        board.setReg_date(formattedTime);  // reg_date 필드를 변형된 시간으로 설정
-        System.out.println("Board - " + formattedTime);
+//        String formattedTime = formatTimeDifference(board.getReg_date());
+//        board.setReg_date(formattedTime);  // reg_date 필드를 변형된 시간으로 설정
+//        System.out.println("Board - " + formattedTime);
 
-        return board;
+        return boardMapper.selectBoard(board_id, board_type);
     }
 
     //자유/하소연 게시글 업데이트
